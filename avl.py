@@ -19,7 +19,7 @@ class Player(object):
         self.score_moyen = 0
         
     def __repr__(self):
-        return "Id : "+str(self.id)+" score moyen : "+str(self.score_moyen)
+        return "Id : "+str(self.id)+" score moyen : "+str(self.score_moyen)#+" imposteur ? : "+str(self.impostor)
         
     def setMeanScore(self,p_score):
         self.score_moyen = p_score
@@ -181,6 +181,23 @@ class AVL_Tree(object):
         self.preOrder(root.left) 
         self.preOrder(root.right)  
         
+        
+    def inOrder(self, root): 
+        if not root: 
+            return
+      
+        self.preOrder(root.left) 
+        print("Score : {} id : {} ".format(root.score_moyen,root.id), end="") 
+        self.preOrder(root.right) 
+        
+    def postOrder(self, root): 
+        if not root: 
+            return
+    
+        self.preOrder(root.left) 
+        self.preOrder(root.right)  
+        print("Score : {} id : {} ".format(root.score_moyen,root.id), end="") 
+        
     def searchmin(self,root):
         if root.left == None:
             return root
@@ -207,8 +224,6 @@ class AVL_Tree(object):
             return self.randomNode(root.left,size)
         else:
             return self.randomNode(root.right,size)
-        
-        
         
     def isAVL(self, root): 
         return (True if abs(self.getBalance(root))<=1 else False)   

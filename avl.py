@@ -8,18 +8,18 @@ Created on Wed Oct 21 19:35:31 2020
 import random
 
 class Player(object):
-    def __init__(self,p_id,score):
+    def __init__(self,p_id,score,nb_games):
         #self.score = 0
         self.id = p_id
         self.score_moyen = score
         self.impostor = False
-        self.nb_games = 0
+        self.nb_games = nb_games
         
     def reset_score(self):
         self.score_moyen = 0
         
     def __repr__(self):
-        return "Id : "+str(self.id)+" score moyen : "+str(self.score_moyen)#+" imposteur ? : "+str(self.impostor)
+        return "Id : "+str(self.id)+" score moyen : "+str(self.score_moyen) + " nb games : "+str(self.nb_games)#+" imposteur ? : "+str(self.impostor)
         
     def setMeanScore(self,p_score):
         self.score_moyen = p_score
@@ -29,8 +29,8 @@ class Player(object):
 
 
 class TreeNode(Player): 
-	def __init__(self,score,p_id):
-		Player.__init__(self,p_id,score)
+	def __init__(self,score,p_id,nb_games):
+		Player.__init__(self,p_id,score,nb_games)
 		self.left = None
 		self.right = None
 		self.height = 1
@@ -40,25 +40,25 @@ class TreeNode(Player):
 
 class AVL_Tree(object): 
     
-    def insert(self, root, key,p_id): 
+    def insert(self, root, key,p_id,nb_games): 
         if not root: 
-            return TreeNode(key,p_id) 
+            return TreeNode(key,p_id,nb_games) 
         elif key < root.score_moyen: 
-            root.left = self.insert(root.left, key,p_id) 
+            root.left = self.insert(root.left, key,p_id,nb_games) 
         else: 
-            root.right = self.insert(root.right, key,p_id) 
+            root.right = self.insert(root.right, key,p_id,nb_games) 
 
         root.height = 1 + max(self.getHeight(root.left), 
 						self.getHeight(root.right)) 
 
         balance = self.getBalance(root) 
-        if balance > 1 and key <= root.left.score_moyen: 
+        if balance > 1 and key < root.left.score_moyen: 
             return self.rightRotate(root) 
 
         if balance < -1 and key >= root.right.score_moyen: 
             return self.leftRotate(root) 
 
-        if balance > 1 and key > root.left.score_moyen: 
+        if balance > 1 and key >= root.left.score_moyen: 
             root.left = self.leftRotate(root.left) 
             return self.rightRotate(root) 
         
@@ -68,16 +68,16 @@ class AVL_Tree(object):
 
         return root 
 
-    def delete(self, root, key,p_id = 0): 
+    def delete(self, root, key,p_id,nb_games ): 
 
         if not root: 
             return root 
 
         elif key < root.score_moyen: 
-            root.left = self.delete(root.left, key,p_id) 
+            root.left = self.delete(root.left, key,p_id,nb_games) 
 
         elif key > root.score_moyen: 
-            root.right = self.delete(root.right, key,p_id) 
+            root.right = self.delete(root.right, key,p_id,nb_games) 
 
         else: 
             if root.left is None: 
@@ -92,8 +92,10 @@ class AVL_Tree(object):
 
             temp = self.getMinValueNode(root.right) 
             root.score_moyen = temp.score_moyen 
+            root.id = temp.id
+            root.nb_games = temp.nb_games
             root.right = self.delete(root.right, 
-									temp.score_moyen,p_id) 
+									temp.score_moyen,temp.id,temp.nb_games) 
 
         if root is None: 
             return root 
@@ -103,10 +105,10 @@ class AVL_Tree(object):
 
         balance = self.getBalance(root) 
 
-        if balance > 1 and self.getBalance(root.left) >= 0: 
+        if balance > 1 and self.getBalance(root.left) > 0: 
             return self.rightRotate(root) 
 
-        if balance < -1 and self.getBalance(root.right) <= 0: 
+        if balance < -1 and self.getBalance(root.right) < 0: 
             return self.leftRotate(root) 
 
         if balance > 1 and self.getBalance(root.left) < 0: 
@@ -171,13 +173,24 @@ class AVL_Tree(object):
         if root is None or root.right is None: 
             return root 
 
-        return self.getMaxValueNode(root.right)                             
+        return self.getMaxValueNode(root.right)  
+
+    def changeKey(self,root, oldVal, newVal,id_p,nb_games): 
+      
+        # First delete old key value  
+        root = self.delete(root, oldVal,id_p,nb_games)  
+      
+        # Then insert new key value  
+        root = self.insert(root, newVal,id_p,nb_games) 
+      
+        # Return new root  
+        return root                            
     
     def preOrder(self, root): 
         if not root: 
             return
 
-        print("Score : {} id : {} ".format(root.score_moyen,root.id), end="") 
+        print("Score : {} id : {} nb games {} ".format(root.score_moyen,root.id,root.nb_games), end="") 
         self.preOrder(root.left) 
         self.preOrder(root.right)  
         
@@ -189,6 +202,14 @@ class AVL_Tree(object):
         self.preOrder(root.left) 
         print("Score : {} id : {} ".format(root.score_moyen,root.id), end="") 
         self.preOrder(root.right) 
+        
+    def inOrder_desc(self, root): 
+        if not root: 
+            return
+      
+        self.preOrder(root.right) 
+        print("Score : {} id : {} ".format(root.score_moyen,root.id), end="") 
+        self.preOrder(root.left) 
         
     def postOrder(self, root): 
         if not root: 

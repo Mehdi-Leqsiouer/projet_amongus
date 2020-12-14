@@ -14,14 +14,21 @@ class Tournoi(object):
         self.root = None
         self.mon_arbre = AVL_Tree()
         for i in range (100):
-            self.root = self.mon_arbre.insert(self.root,0,i+1)
+            self.root = self.mon_arbre.insert(self.root,0,i+1,0)
         
     def reset_scores(self,root):
         if root:
             root.score_moyen = 0
             self.reset_scores(root.left)
-            self.reset_scores(root.right)
+            self.reset_scores(root.right)          
             
+    def increase_games(self,root):
+        if root == None:
+            return root
+        root.nb_games += 1
+        return self.increase_games(root.left)
+        return self.increase_games(root.right)
+    
     def play_3game_random(self):
         ar = []
         self.mon_arbre.inOrderArray(self.root,ar)
@@ -31,12 +38,46 @@ class Tournoi(object):
                 players = ar[i*10:(i+1)*10]
                 #print(players)
                 play_game(players)
+                #("DEBUG ",players)
                 reset_role(players)
-        #print(ar)
         self.root = None
         self.mon_arbre = AVL_Tree()
         for el in ar:
-            self.root = self.mon_arbre.insert(self.root,el.score_moyen,el.id)
+            self.root = self.mon_arbre.insert(self.root,el.score_moyen,el.id,el.nb_games)
+            
+    def play_3game_random_bis(self):
+        for i in range(3):
+            list_impostor = []
+            r = random.randint(1,100)
+            for i in range(20):
+                while r in list_impostor:
+                    r = random.randint(1,100)
+                list_impostor.append(r)      
+            #self.root = self.increase_games(self.root)        
+            self.update_score_tree(self.root,list_impostor)
+        
+        
+  
+    def re_create_tree(self,root):
+        pass     
+        
+            
+    def update_score_tree(self,root,list_impostor):
+        if root:
+            #root.nb_games += 1
+            nb_g = root.nb_games + 1
+            l_id = root.id
+            score = root.score_moyen
+            #print(root)
+            if l_id in list_impostor:
+                new_score = round((score + get_score_impostor() ) / nb_g,3)
+                self.root = self.mon_arbre.changeKey(self.root,score,new_score,l_id,nb_g)
+                list_impostor.remove(l_id)
+            else:
+                new_score = round((score + get_score_crewmate() ) / nb_g,3)
+                self.root = self.mon_arbre.changeKey(self.root,score,new_score,l_id,nb_g)
+            self.update_score_tree(root.left,list_impostor)
+            self.update_score_tree(root.right,list_impostor)
             
     def play_game_until_end(self):
         ar = []
@@ -56,7 +97,7 @@ class Tournoi(object):
         self.root = None
         self.mon_arbre = AVL_Tree()
         for el in ar:
-            self.root = self.mon_arbre.insert(self.root,el.score_moyen,el.id)
+            self.root = self.mon_arbre.insert(self.root,el.score_moyen,el.id,el.nb_games)
         
         
     def play_5_last_game(self):
@@ -68,7 +109,7 @@ class Tournoi(object):
         self.root = None
         self.mon_arbre = AVL_Tree()
         for el in ar:
-            self.root = self.mon_arbre.insert(self.root,el.score_moyen,el.id)
+            self.root = self.mon_arbre.insert(self.root,el.score_moyen,el.id,el.nb_games)
     
     def delete_last10(self):
         for i in range (10):
@@ -94,9 +135,6 @@ def play_game(players):
 
 
 def get_score_impostor():
-    #impossible = [28,29,30,31,32,33,34,35,36,37]
-    alea = random.randint(0,12)
-    #while alea in impossible:
     alea = random.randint(0,38)
     return alea
 
@@ -145,8 +183,8 @@ def main():
     print("Delete")
     #tournoi.mon_arbre.preOrder(tournoi.root)
     print()
-    t = tournoi.mon_arbre.randomNode(tournoi.root,tournoi.mon_arbre.size(tournoi.root))
-    print(t)
+    #t = tournoi.mon_arbre.randomNode(tournoi.root,tournoi.mon_arbre.size(tournoi.root))
+    #print(t)
     tournoi.play_3game_random()
     tournoi.mon_arbre.preOrder(tournoi.root)
     #drawtree(tournoi.root)
@@ -165,6 +203,21 @@ def main():
     tournoi.mon_arbre.inOrderArray(tournoi.root,ar)
     ar.sort(key= lambda x: x.score_moyen, reverse = True)
     print(ar)
+   # drawtree(tournoi.root)
+    
+
+    """tournoi.mon_arbre.inOrder(tournoi.root)
+    #tournoi.root = tournoi.mon_arbre.delete(tournoi.root,0)
+    
+    #tournoi.root = tournoi.mon_arbre.changeKey(tournoi.root,0,10,1,1)
+    tournoi.play_3game_random_bis()
+    #tournoi.mon_arbre.inOrder(tournoi.root)
+    print()
+    print()
+    #print(tournoi.mon_arbre.getMinValueNode(tournoi.root))
+    tournoi.mon_arbre.inOrder(tournoi.root)
+    #drawtree(tournoi.root)"""
+   
     
         
 

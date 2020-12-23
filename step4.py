@@ -34,10 +34,10 @@ def step4_algorithm(g):
     for som in sommets:
         path = hamilton(g,som)
         if len(path) > 0:
-            print("Sommet de départ : {} ".format(som))
+            print("Starting vertex : {} ".format(som))
             print(path)
         else:
-            print("Pas de chemin depuis le sommet : {}".format(som))
+            print("No hamiltonian path from this vertex: {}".format(som))
         print()
 
 

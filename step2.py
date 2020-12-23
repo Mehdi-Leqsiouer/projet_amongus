@@ -50,16 +50,16 @@ def get_set_impostors(graph,player_dead):
 def main_step2(player_dead):
     g = creer_graphe("step2.dat")
     if player_dead not in g:
-        print("Le joueur n'existe pas, voici la liste des joueurs :")
+        print("The player doesn't exist, here is the list of players : :")
         print(g.keys())
         return
     result = get_set_impostors(g,player_dead)
-    print("Ensemble des couples d'imposteurs probable :")
+    print("Set of probable impostors :")
     print()
     for el in result:
         liste = result[el]
         for el2 in liste:
-            print("{} avec {}".format(el,el2))
+            print("{} with {}".format(el,el2))
         print()
 
     

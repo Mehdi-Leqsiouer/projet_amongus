@@ -19,7 +19,7 @@ class Player(object):
         self.score_moyen = 0
         
     def __repr__(self):
-        return "Id : "+str(self.id)+" score moyen : "+str(self.score_moyen) + " nb games : "+str(self.nb_games)#+" imposteur ? : "+str(self.impostor)
+        return "Id : "+str(self.id)+" mean score : "+str(self.score_moyen) + " nb games : "+str(self.nb_games)#+" imposteur ? : "+str(self.impostor)
         
     def setMeanScore(self,p_score):
         self.score_moyen = p_score

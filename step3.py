@@ -110,10 +110,10 @@ def main_step3(depart,arriver):
     g_impostor = creer_graphe("step3_impostor.dat")
     if depart not in g_crewmate or arriver not in g_crewmate:
         if depart not in g_crewmate:
-            print("Le sommet de départ n'existe pas dans la liste des sommets")
+            print("The starting vertex doesn't exist in the list of vertex.")
         if arriver not in g_crewmate:
-            print("Le sommet d'arriver n'existe pas dans la liste des sommets")
-        print("Voici la liste de sommets : ")
+            print("The ending vertex doesn't exist in the list of vertex.")
+        print("Here is the list of vertex : ")
         print(g_crewmate.keys())
         return
     print("\n---------- STEP 3 : shortest path from A to B ----------")
@@ -122,8 +122,8 @@ def main_step3(depart,arriver):
     chemin = dij[1]
     chemin.reverse()
     print("Path & length as crewmate : ")
-    print("\nChemin {}".format(chemin))
-    print("Poids : {}".format(distances[arriver]))
+    print("\nPath {}".format(chemin))
+    print("Weight : {}".format(distances[arriver]))
     print()
     
     dij = calcul_dijsktra(g_impostor, depart, arriver)
@@ -131,8 +131,8 @@ def main_step3(depart,arriver):
     chemin = dij[1]
     chemin.reverse()
     print("Path & length as impostor : ")
-    print("\nChemin {}".format(chemin))
-    print("Poids : {}".format(distances[arriver]))
+    print("\nPath {}".format(chemin))
+    print("Weight : {}".format(distances[arriver]))
     print()
     
     print("---------- STEP 3 : All shortest path from each pair of rooms ----------")

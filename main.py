@@ -17,20 +17,20 @@ def boucle():
         print ("--------------- Choice 2 : Step 2 : get set of impostor ---------------")
         print ("--------------- Choice 3 : Step 3 : Get shortest paths of the map ---------------")
         print ("--------------- Choice 4 : Step 4 : Get the path to go to each room only one time ---------------")
-        print ("--------------- Press : 'Q' to leave the menu ---------------")
+        print ("--------------- Press : 'Q' or 'q' to leave the menu ---------------")
         print()
-        reponse = str(input("Choisissez la step à exécuter :"))
+        reponse = str(input("Choose the step to execute : "))
         print()
         if (reponse == 'Q' or reponse == 'q'):
             break
         if (int(reponse) == 1):
             main_step1()
         elif (int(reponse) == 2):
-            player_dead = str(input("Saisir le joueur qui est mort : "))
+            player_dead = str(input("Enter the player who died : "))
             main_step2(player_dead)
         elif(int(reponse) == 3):
-            depart  = str(input("Saisir sommet de départ :  "))
-            arriver = str(input("Saisir sommet d'arriver :  "))
+            depart  = str(input("Enter the starting vertex : "))
+            arriver = str(input("Enter the ending vertex :  "))
             main_step3(depart,arriver)
         elif(int(reponse) == 4):
             main_step4()

@@ -7,6 +7,7 @@ Created on Sun Dec  6 21:06:29 2020
 
 from avl import AVL_Tree
 import random
+import drawtree
 
 class Tournoi(object):
     
@@ -146,35 +147,7 @@ def get_score_crewmate():
     return alea
 
 
-
-def drawtree(root):
-        def height(root):
-            return 1 + max(height(root.left), height(root.right)) if root else -1
-        def jumpto(x, y):
-            t.penup()
-            t.goto(x, y)
-            t.pendown()
-        def draw(node, x, y, dx):
-            if node:
-                t.goto(x, y)
-                jumpto(x, y-20)
-                t.write(node.score_moyen, align='center', font=('Arial', 12, 'normal'))
-                draw(node.left, x-dx, y-60, dx/2)
-                jumpto(x, y-20)
-                draw(node.right, x+dx, y-60, dx/2)
-        import turtle
-        t = turtle.Turtle()
-        t.speed(0); turtle.delay(0)
-        h = height(root)
-        jumpto(0, 30*h)
-        draw(root, 0, 30*h, 40*h)
-        t.hideturtle()
-        turtle.mainloop()
-            
-
-
-
-def main():
+def main_step1():
     tournoi = Tournoi()
     tournoi.mon_arbre.preOrder(tournoi.root)
     #drawtree(tournoi.root)
@@ -195,7 +168,7 @@ def main():
     
     print()
     print()
-    print("------ PODIUM ------")
+    print("------ TOP 10 PLAYERS ------")
     tournoi.reset_scores(tournoi.root)
     tournoi.play_5_last_game()
     #tournoi.mon_arbre.inOrder(tournoi.root)
@@ -203,6 +176,14 @@ def main():
     tournoi.mon_arbre.inOrderArray(tournoi.root,ar)
     ar.sort(key= lambda x: x.score_moyen, reverse = True)
     print(ar)
+    
+    print()
+    print("------ PODIUM ------")
+    count = 0;
+    while count < 3:
+        print(ar[count])
+        count+=1
+        
    # drawtree(tournoi.root)
     
 
@@ -222,4 +203,4 @@ def main():
         
 
 if __name__ == "__main__":
-    main()
+    main_step1()

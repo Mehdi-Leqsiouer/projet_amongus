@@ -105,12 +105,18 @@ def floydWarshall(graph):
     return mat_poids
 
 
-def main():
+def main_step3(depart,arriver):
     g_crewmate = creer_graphe("step4.dat")
     g_impostor = creer_graphe("step3_impostor.dat")
+    if depart not in g_crewmate or arriver not in g_crewmate:
+        if depart not in g_crewmate:
+            print("Le sommet de départ n'existe pas dans la liste des sommets")
+        if arriver not in g_crewmate:
+            print("Le sommet d'arriver n'existe pas dans la liste des sommets")
+        print("Voici la liste de sommets : ")
+        print(g_crewmate.keys())
+        return
     print("\n---------- STEP 3 : shortest path from A to B ----------")
-    depart  = 'Medbay'
-    arriver = 'Navigations'
     dij = calcul_dijsktra(g_crewmate, depart, arriver)
     distances = dij[0]
     chemin = dij[1]
@@ -134,7 +140,9 @@ def main():
     print(d)
     
 if __name__ == "__main__":
-    main()
+    depart = "Medbay"
+    arriver = "Navigations"
+    main_step3(depart,arriver)
 
 
 

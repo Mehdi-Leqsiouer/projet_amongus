@@ -78,3 +78,48 @@ def calcul_mat_poids(graphe):
     for tu in aretes_graphe:
         poids[tu[0]][tu[1]] = tu[2]
     return poids
+
+
+def calcul_mat_adj(graphe):
+    """Calcul de la matrice d'adjacence
+    Permet de calculer une matrice d'adjacence à partir d'un graphe
+    sous forme de liste d'adjacence.
+    
+        Args: 
+              -graphe est un graphe sous forme d'une liste d'adjacence de la forme 
+              d'un dictionnaire de dictionnaires:
+                  G = {'France': {'Italie': 10, 'Allemagne': 5}, 
+                       'Italie': {'France': 10, 'Allemagne': 7, 'Belgique': 3}, 
+                       ...
+                       }
+                  
+        Valeur de retour:                  
+            La matrice d'adjacence sous forme de dictionnaire de dictionnaire
+            dont les clés sont les sommets du graphe et dont les valeurs sont
+            1 ou 0 selon l'adjacence ou non des 2 sommets
+
+   """
+    
+    """Extraction des noeuds du graphe: ce sont les clés du dictionnaire"""
+    Noeuds = [cle for cle in graphe.keys()]
+    
+    """Extraction des aretes du graphe sous forme d'une liste de
+        de tuples: (tail, head, poids)"""
+    aretes_graphe = creer_aretes(graphe)
+    
+    """Initialisation d'une matrice à 0"""
+    adjacence = {}
+    for noeud in Noeuds:
+        adjacence[noeud] = {}
+        for noeud2 in Noeuds:
+            adjacence[noeud][noeud2]=0
+            
+    """On parcourt la liste des aretes et on récupère les noms des queues et des
+        têtes des aretes correspondant dans la liste de Noeuds. Ce sont ces
+        indices qui constituent les coordonnées dans la matrice d'adjacence.
+        A chaque fois que ces coordonnées existent, on remplace la valeur 0 par 1
+    """
+    for tu in aretes_graphe:
+        adjacence[tu[0]][tu[1]] = 1
+    
+    return adjacence

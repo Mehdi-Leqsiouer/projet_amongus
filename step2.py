@@ -7,31 +7,9 @@ Created on Fri Dec  4 20:43:30 2020
 
 from graphe import creer_graphe,creer_aretes,calcul_mat_adj
 
-"""
 def get_set_impostors(graph,player_dead):
-    aretes_suspect = creer_aretes(graph,player_dead)
-    Noeuds = [cle for cle in graph.keys()]
-    sommets_suspects = []
-    result = dict()
-    #print(aretes_suspect)
-    for ar in aretes_suspect:
-        for v in ar:
-            sommets_suspects.append(v)
-            result[v] = []
-    #print(sommets_suspects)
-    
-    for sommet in sommets_suspects:
-        #print("suspect : {}".format(sommet))
-        for sommet2 in Noeuds:
-            if sommet2 != sommet:
-                aretes = creer_aretes(graph,sommet2)
-                dico = aretes[0]
-                if sommet not in dico:
-                    result[sommet].append(sommet2)
-    return result"""
-
-
-def get_set_impostors(graph,player_dead):
+    """This function create the adjacency matrix and return the set of
+    probable impostor based on the matrix"""
     adj = calcul_mat_adj(graph)
     aretes_suspect = creer_aretes(graph,player_dead)
     result = dict()
@@ -48,6 +26,7 @@ def get_set_impostors(graph,player_dead):
     return result
 
 def main_step2(player_dead):
+    """Main function"""
     g = creer_graphe("step2.dat")
     if player_dead not in g:
         print("The player doesn't exist, here is the list of players : :")

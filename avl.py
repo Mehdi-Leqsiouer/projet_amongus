@@ -8,6 +8,7 @@ Created on Wed Oct 21 19:35:31 2020
 import random
 
 class Player(object):
+    """Player class that contain mean score and boolean impostor """
     def __init__(self,p_id,score,nb_games):
         #self.score = 0
         self.id = p_id
@@ -29,6 +30,7 @@ class Player(object):
 
 
 class TreeNode(Player): 
+	"""Node of the tree that contains Player caracteristics """
 	def __init__(self,score,p_id,nb_games):
 		Player.__init__(self,p_id,score,nb_games)
 		self.left = None
@@ -39,6 +41,7 @@ class TreeNode(Player):
 		return Player.__repr__(self)
 
 class AVL_Tree(object): 
+    """AVL tree containing TreeNode. The tree is auto-balanced """
     
     def insert(self, root, key,p_id,nb_games): 
         if not root: 

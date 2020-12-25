@@ -9,6 +9,7 @@ from graphe import creer_graphe
 
 
 def hamilton(graph, start_v):
+  """Implementation of Hamilton pathfinding algorithm"""  
   size = len(graph)
   # if None we are -unvisiting- comming back and pop v
   to_visit = [None, start_v]
@@ -29,13 +30,14 @@ def hamilton(graph, start_v):
 
 
 def step4_algorithm(g):
+    """Main function"""
     sommets = [cle for cle in g.keys()]
     #path = hamilton2(g,"Lower_Engine")
     for som in sommets:
         path = hamilton(g,som)
         if len(path) > 0:
             print("Starting vertex : {} ".format(som))
-            print(path)
+            print("Path : {}".format(path))
         else:
             print("No hamiltonian path from this vertex: {}".format(som))
         print()
@@ -46,6 +48,7 @@ def step4_algorithm(g):
 def main_step4():
     g = creer_graphe("step4.dat")
     print("---------- STEP 4 : Path through each room once ----------")
+    print()
     step4_algorithm(g)
 
 if __name__ == "__main__":

@@ -9,23 +9,27 @@ import math
 from graphe import creer_graphe,creer_aretes,calcul_mat_poids
 
 def calcul_dijsktra (graphe, sommet_start, sommet_fin=None): 
+    """Implementation of Dijsktra pathfinding algorithm """
     
-    """Extraction des sommets S du graphe"""
+    
+    """All vertices"""
     sommets_S = [cle for cle in graphe.keys()]
     
-    """Le sommet de départ existe-t-il?"""
+    """Starting vertex check"""
     if sommet_start not in sommets_S:
         print ('Erreur: le noeud de départ {} n\'existe pas'.format(sommet_start))
         return
     
+    if sommet_start == sommet_fin:
+        return "Start = goal"
+    
      
-    """Vecteur des sommets complémentaires, qui n'ont pas encore été traités
-       Au départ, E= S -{sommet_start}
+    """Vertices not computed 
     """
     sommets_E = sommets_S.copy()
     sommets_E.remove(sommet_start)
     
-    """Matrice des poids"""
+    """Weight matrix"""
     poids = calcul_mat_poids(graphe)
 
     #print(poids)
@@ -38,7 +42,6 @@ def calcul_dijsktra (graphe, sommet_start, sommet_fin=None):
         else:
             distances_E[sommet] = math.inf
     
-    #Dictionnaire des prédécesseurs
     pred = {}
     aretes_depart = creer_aretes(graphe,sommet_start)
     for v in aretes_depart:
@@ -62,8 +65,7 @@ def calcul_dijsktra (graphe, sommet_start, sommet_fin=None):
                     voisin_existe = True
                     sommet_v = v
                     if voisin_existe:   
-                        #Relaxation: Mise à jour des distances
-                        #A COMPLETER
+                        #update distance
                         if(distances_E[sommet_u] != math.inf):
                             dist = distances_E[sommet_u] + poids[sommet_u][sommet_v]
                         else:
@@ -75,9 +77,9 @@ def calcul_dijsktra (graphe, sommet_start, sommet_fin=None):
                             pred[sommet_v] = sommet_u
                 #print(distances_E)
         #print(distances_E)      
-        #Mise à jour des sommets non traités: retrait de sommet_u
+        #update vertices computed list
         sommets_E.remove(sommet_u)
-    #Calcul du chemin de sommet_start à sommet_fin
+    #finding the path
     #print(distances_E)
     if sommet_fin:
         chemin = []
@@ -93,7 +95,79 @@ def calcul_dijsktra (graphe, sommet_start, sommet_fin=None):
     return distances_E
 
 
+# finds shortest path between 2 nodes of a graph using BFS
+def bfs_shortest_path(graph, start, goal):
+    """Implementation of BFS pathfinding """
+    # keep track of explored nodes
+    explored = []
+    # keep track of all the paths to be checked
+    queue = [[start]]    
+    
+    """All vertices"""
+    sommets_S = [cle for cle in graph.keys()]
+    
+    """Starting vertex"""
+    if start not in sommets_S:
+        print ('Erreur: le noeud de départ {} n\'existe pas'.format(start))
+        return
+    
+     
+    """Vertices not computed
+    """
+    sommets_E = sommets_S.copy()
+    sommets_E.remove(start)
+    
+    """Weight matrix"""
+    poids = calcul_mat_poids(graph)
+
+    #print(poids)
+    distances_E = {}
+    distances_E[start] = 0
+
+    for sommet in sommets_E:
+        if (sommet != start and poids[start][sommet] != math.inf):
+            distances_E[sommet] = poids[start][sommet]
+        else:
+            distances_E[sommet] = math.inf
+ 
+    # return path if start is goal
+    if start == goal:
+        return "Start = goal"
+ 
+    # keeps looping until all possible paths have been checked
+    while queue:
+        # pop the first path from the queue
+        path = queue.pop(0)
+        # get the last node from the path
+        node = path[-1]
+        if node not in explored:
+            neighbours = graph[node]
+            # go through all neighbour nodes, construct a new path and
+            # push it into the queue
+            for neighbour in neighbours:
+                new_path = list(path)
+                new_path.append(neighbour)
+                if(distances_E[node] != math.inf):
+                    dist = distances_E[node] + poids[node][neighbour]
+                else:
+                    dist = poids[node][neighbour]
+                if (dist < distances_E[neighbour] or distances_E[neighbour] == math.inf):
+                    distances_E[neighbour] = dist
+                queue.append(new_path)
+                # return path if neighbour is goal
+                if neighbour == goal:
+                    return new_path,distances_E
+ 
+            # mark node as explored
+            explored.append(node)
+ 
+    # in case there's no path between the 2 nodes
+    return "So sorry, but a connecting path doesn't exist :("
+
+
 def floydWarshall(graph):
+    """Implementation of Floyd Warshall algorithm that return all
+    weights for each pair of vertices"""
     mat_poids = calcul_mat_poids(graph)
     for k in mat_poids:
         for i in mat_poids:
@@ -105,8 +179,10 @@ def floydWarshall(graph):
     return mat_poids
 
 
-def main_step3(depart,arriver):
+def step3_3(depart,arriver):
+    """Main function that call pathfinding function for 3) question"""
     g_crewmate = creer_graphe("step4.dat")
+    
     g_impostor = creer_graphe("step3_impostor.dat")
     if depart not in g_crewmate or arriver not in g_crewmate:
         if depart not in g_crewmate:
@@ -116,15 +192,16 @@ def main_step3(depart,arriver):
         print("Here is the list of vertex : ")
         print(g_crewmate.keys())
         return
+    
     print("\n---------- STEP 3 : shortest path from A to B ----------")
-    dij = calcul_dijsktra(g_crewmate, depart, arriver)
-    distances = dij[0]
-    chemin = dij[1]
-    chemin.reverse()
+    dij = bfs_shortest_path(g_crewmate, depart, arriver)
+    distances = dij[1]
+    chemin = dij[0]
+    #chemin.reverse()
     print("Path & length as crewmate : ")
     print("\nPath {}".format(chemin))
     print("Weight : {}".format(distances[arriver]))
-    print()
+    print()    
     
     dij = calcul_dijsktra(g_impostor, depart, arriver)
     distances = dij[0]
@@ -135,14 +212,23 @@ def main_step3(depart,arriver):
     print("Weight : {}".format(distances[arriver]))
     print()
     
+def step3_4():
+    """Main function that call Floyd Warshall for 4) question"""
+    g_impostor = creer_graphe("step3_impostor.dat")
     print("---------- STEP 3 : All shortest path from each pair of rooms ----------")
-    d = floydWarshall(g_crewmate)
-    print(d)
+    d = floydWarshall(g_impostor)
+    for el in d:
+        print ("Starting room : {} ".format(el))
+        #print(d[el])
+        for el2 in d[el]:
+            print("Ending room : {} , Weight : {}".format(el2,d[el][el2]))
+        print()
     
 if __name__ == "__main__":
-    depart = "Medbay"
-    arriver = "Navigations"
-    main_step3(depart,arriver)
+    depart = "Navigations"
+    arriver = "Upper_Engine"
+    step3_3(depart,arriver)
+    step3_4()
 
 
 
